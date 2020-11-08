@@ -21,7 +21,7 @@ public class FlightDataReaderTest {
 
     @Test
     public void readPlaneDimensions_itShouldReadPlaneDataCorrectly() throws FileNotFoundException {
-        final String fileName = "fligt_data.txt";
+        final String fileName = "flight_data.txt";
         final ClassLoader classLoader = getClass().getClassLoader();
         final URL resource = classLoader.getResource(fileName);
         final FlightDataReader flightDataReader = new FlightDataReader(resource.getPath());
@@ -32,7 +32,7 @@ public class FlightDataReaderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void readPlaneDimensions_itShouldThrowAnExceptionIfDataIsMissingFromFile() throws FileNotFoundException {
-        final String fileName = "fligt_data_missing_rows.txt";
+        final String fileName = "flight_data_missing_rows.txt";
         final ClassLoader classLoader = getClass().getClassLoader();
         final URL resource = classLoader.getResource(fileName);
         final FlightDataReader flightDataReader = new FlightDataReader(resource.getPath());
@@ -41,7 +41,7 @@ public class FlightDataReaderTest {
 
     @Test
     public void readPlaneDimensions_itShouldReadBookingsListDataCorrectly() throws FileNotFoundException {
-        final String fileName = "fligt_data.txt";
+        final String fileName = "flight_data.txt";
         final ClassLoader classLoader = getClass().getClassLoader();
         final URL resource = classLoader.getResource(fileName);
         final FlightDataReader flightDataReader = new FlightDataReader(resource.getPath());
@@ -49,6 +49,7 @@ public class FlightDataReaderTest {
         assertThat(travelerList, is(not(nullValue())));
         assertThat(travelerList, hasSize(7));
         assertThat(travelerList.get(2).stream().map(Traveler::getId).collect(Collectors.toList()), hasItems("8"));
-        assertThat(travelerList.get(6).stream().map(Traveler::getId).collect(Collectors.toList()), hasItems("15", "16"));
+        assertThat(
+                travelerList.get(6).stream().map(Traveler::getId).collect(Collectors.toList()), hasItems("15", "16"));
     }
 }

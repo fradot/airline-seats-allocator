@@ -5,9 +5,7 @@ import com.fradot.exercise.airline.seats.manager.model.Traveler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Class that handles flight data reading from file
@@ -31,7 +29,7 @@ public class FlightDataReader {
     }
 
     Plane readPlaneDimensions() throws FileNotFoundException {
-        final Scanner scanner = new Scanner(new File(filePath));
+        final Scanner scanner = new Scanner(new File(filePath), "utf-8");
         final int[] data = new int[2];
         int count = 0;
 
@@ -56,6 +54,7 @@ public class FlightDataReader {
     List<List<Traveler>> readBookingsList() throws FileNotFoundException {
         final Scanner scanner = new Scanner(new File(filePath));
         final List<List<Traveler>> bookingsList = new ArrayList<>();
+        final Set<String> travellersSet = new HashSet<>();
         int count = 0;
         try {
             while (scanner.hasNextLine()) {
@@ -66,7 +65,12 @@ public class FlightDataReader {
                     final String[] ids = row.split(" ");
                     final List<Traveler> group = new ArrayList<>(ids.length);
                     for (String travelerId : ids) {
-                        group.add(new Traveler(travelerId));
+                        if (!travellersSet.contains(travelerId)) {
+                            group.add(new Traveler(travelerId));
+                            travellersSet.add(travelerId);
+                        } else {
+                            throw new IllegalArgumentException("Travellers ids must be unique");
+                        }
                     }
                     bookingsList.add(group);
                 }
