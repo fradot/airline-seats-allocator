@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AirlineSeatsManagerMain {
@@ -41,16 +40,14 @@ public class AirlineSeatsManagerMain {
 
     private static void printOutputMatrix(final Long[][] output, final double travellersSatisfaction) {
         for (int i = 0; i < output.length; i++) {
-            List<Long> ids = Arrays.asList(output[i]);
-            System.out.println(
-                    String.join(" ", ids.stream().map(String::valueOf).collect(Collectors.toList())));
+            System.out.println(String.join(
+                    " ", Arrays.asList(output[i]).stream().map(String::valueOf).collect(Collectors.toList())));
         }
-        System.out.println(round(travellersSatisfaction ,2) + "%");
+        System.out.println(round(travellersSatisfaction, 2) + "%");
     }
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
