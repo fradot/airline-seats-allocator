@@ -1,53 +1,46 @@
 package com.fradot.exercise.airline.seats.manager;
 
-import com.fradot.exercise.airline.seats.manager.model.Traveler;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestUtil {
 
-    private TestUtil(){};
+    private TestUtil() {}
 
-    public static List<List<Traveler>> generateTravellersListFromSeats(final String[][] seatsMatrix) {
-        final List<List<Traveler>> travellersList = new ArrayList<List<Traveler>>(seatsMatrix.length);
-        for(int i=0; i < seatsMatrix.length; i++) {
-            List<Traveler> travellers = new ArrayList<Traveler>();
-            for(int j=0; j < seatsMatrix[i].length; j++) {
-                if (seatsMatrix[i][j] != null) {
-                    String id = seatsMatrix[i][j];
-                    if (id != null && id.length() > 0) {
-                        Traveler traveler = new Traveler(id, i, j);
-                        travellers.add(traveler);
-                    }
+    public static String[][] fillSeatsMatrixFromTravellersGroups(
+            final List<List<String>> travellersGroups, final String[][] seatsMatrix) {
+        for (int i = 0; i < travellersGroups.size(); i++) {
+            final List<String> group = travellersGroups.get(i);
+            if (group != null && group.size() > 0) {
+                for (int j = 0; j < group.size(); j++) {
+                    seatsMatrix[i][j] = group.get(j);
                 }
             }
-            travellersList.add(travellers);
-        }
-
-        return travellersList;
-    }
-
-    public static String[][] generateSeatsMatrixFromTravellersGroups(final List<List<String>> travellersGroups) {
-        final String[][] seatsMatrix = new String[travellersGroups.size()][];
-        int i = 0;
-        for (List<String> group : travellersGroups) {
-            final String[] groupArray = new String[group.size()];
-            for (int j =0; j < groupArray.length; j++) {
-                groupArray[j] = group.get(j);
-            }
-            seatsMatrix[i] = groupArray;
-            i++;
         }
 
         return seatsMatrix;
     }
 
-    public static List<String> generateTravellersIdList(String ... ids) {
-        final List<String> result = new ArrayList<String>(ids.length);
-        for(String id: ids) {
+    public static String[][] generateEmptySeatsMatrix(final int rows, final int columns) {
+        final String[][] seatsMatrix = new String[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            Arrays.fill(seatsMatrix[i], "");
+        }
+        return seatsMatrix;
+    }
+
+    public static List<String> generateTravellersIdList(final String... ids) {
+        final List<String> result = new ArrayList<>(ids.length);
+        for (String id : ids) {
             result.add(id);
         }
         return result;
+    }
+
+    public static void deAllocateSeatsMatrix(final String[][] seatsMatrix, final int... rows) {
+        for (int row : rows) {
+            Arrays.fill(seatsMatrix[row], "");
+        }
     }
 }
