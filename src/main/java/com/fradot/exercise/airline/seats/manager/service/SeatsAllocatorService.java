@@ -50,12 +50,6 @@ public class SeatsAllocatorService {
             }
         }
 
-        if (allocatedTravellers == 0
-                && travellersGroupIds.size() > 0
-                && travellersGroupIds.get(0).size() > 0) {
-            throw new SeatsAllocatorException("Error allocating seats! No seat was allocated on the plane!");
-        }
-
         // calculate travellers satisfaction
         this.travellersSatisfaction = calculateBookingsSatisfaction(seatsMatrix, travellersGroupIds);
     }
