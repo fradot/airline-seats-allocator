@@ -54,7 +54,7 @@ public class FlightDataReader {
     List<List<Traveler>> readBookingsList() throws FileNotFoundException {
         final Scanner scanner = new Scanner(new File(filePath));
         final List<List<Traveler>> bookingsList = new ArrayList<>();
-        final Set<String> travellersSet = new HashSet<>();
+        final Set<Long> travellersSet = new HashSet<>();
         int count = 0;
         try {
             while (scanner.hasNextLine()) {
@@ -65,9 +65,9 @@ public class FlightDataReader {
                     final String[] ids = row.split(" ");
                     final List<Traveler> group = new ArrayList<>(ids.length);
                     for (String travelerId : ids) {
-                        if (!travellersSet.contains(travelerId)) {
+                        if (!travellersSet.contains(getLongId(travelerId))) {
                             group.add(new Traveler(travelerId));
-                            travellersSet.add(travelerId);
+                            travellersSet.add(getLongId(travelerId));
                         } else {
                             throw new IllegalArgumentException("Travellers ids must be unique");
                         }
@@ -90,5 +90,9 @@ public class FlightDataReader {
 
     public Plane getPlane() {
         return plane;
+    }
+
+    private Long getLongId(final String id) {
+        return id.endsWith("W") ? Long.valueOf(id.substring(0, id.length() -1)) : Long.valueOf(id);
     }
 }

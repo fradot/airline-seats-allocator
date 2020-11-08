@@ -39,8 +39,17 @@ public class FlightDataReaderTest {
         flightDataReader.readPlaneDimensions();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void readBookingsList_itShouldThrowAnExceptionIfDuplicatedTravellersIdsInFile() throws FileNotFoundException {
+        final String fileName = "flight_data_duplicated_ids.txt";
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final URL resource = classLoader.getResource(fileName);
+        final FlightDataReader flightDataReader = new FlightDataReader(resource.getPath());
+        flightDataReader.readBookingsList();
+    }
+
     @Test
-    public void readPlaneDimensions_itShouldReadBookingsListDataCorrectly() throws FileNotFoundException {
+    public void readBookingsList_itShouldReadBookingsListDataCorrectly() throws FileNotFoundException {
         final String fileName = "flight_data.txt";
         final ClassLoader classLoader = getClass().getClassLoader();
         final URL resource = classLoader.getResource(fileName);

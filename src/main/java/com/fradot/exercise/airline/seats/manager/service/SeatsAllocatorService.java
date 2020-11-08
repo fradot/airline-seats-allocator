@@ -95,9 +95,7 @@ public class SeatsAllocatorService {
     private static String[][] generateSeatsMatrix(final int rows, final int columns) {
         final String[][] seatsMatrix = new String[rows][columns];
         for (int i = 0; i < seatsMatrix.length; i++) {
-            for (int j = 0; j < seatsMatrix[i].length; j++) {
-                seatsMatrix[i][j] = EMPTY_SEAT;
-            }
+            Arrays.fill(seatsMatrix[i], EMPTY_SEAT);
         }
         return seatsMatrix;
     }
