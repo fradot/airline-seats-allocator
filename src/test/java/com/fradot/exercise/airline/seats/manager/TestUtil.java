@@ -1,8 +1,11 @@
 package com.fradot.exercise.airline.seats.manager;
 
+import com.fradot.exercise.airline.seats.manager.model.Traveler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestUtil {
 
@@ -36,6 +39,14 @@ public class TestUtil {
             result.add(id);
         }
         return result;
+    }
+
+    public static List<List<Traveler>> generateTravellersGroupsFromIdGroups(final List<List<String>> idGroups) {
+        final List<List<Traveler>> travellersGroups = new ArrayList<>(idGroups.size());
+        for(List<String> idGroup: idGroups) {
+            travellersGroups.add(idGroup.stream().map(Traveler::new).collect(Collectors.toList()));
+        }
+        return travellersGroups;
     }
 
     public static void deAllocateSeatsMatrix(final String[][] seatsMatrix, final int... rows) {

@@ -1,7 +1,7 @@
 package com.fradot.exercise.airline.seats.manager.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class models a Plane.
@@ -10,12 +10,12 @@ public class Plane {
 
     private final int rows;
     private final int seatsPerRow;
-    private final List<Traveler> travellersList;
+    private final Set<Traveler> travellersList;
 
     public Plane(int rows, int seatsPerRow) {
         this.rows = rows;
         this.seatsPerRow = seatsPerRow;
-        this.travellersList = new ArrayList<>(rows * seatsPerRow);
+        this.travellersList = new HashSet<>(rows * seatsPerRow);
     }
 
     public int getRows() {
@@ -30,7 +30,7 @@ public class Plane {
         this.travellersList.add(traveler);
     }
 
-    public List<Traveler> getTravellersList() {
+    public Set<Traveler> getTravellersSet() {
         return this.travellersList;
     }
 }

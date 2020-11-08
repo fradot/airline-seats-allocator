@@ -1,5 +1,8 @@
 package com.fradot.exercise.airline.seats.manager.model;
 
+/**
+ * Class that models a Seat.
+ */
 public class Seat {
 
     private int row;

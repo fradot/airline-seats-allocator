@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 class SeatsAllocatorAlgorithm {
 
-    private static final double MAX_TRAVELLERS_SATISFACTION = 100.0;
-    private static final String WINDOW = "W";
-    private static final String EMPTY_SEAT = "";
+    static final double MAX_TRAVELLERS_SATISFACTION = 100.0;
+    static final String WINDOW = "W";
+    static final String EMPTY_SEAT = "";
 
     private SeatsAllocatorAlgorithm() {}
 

@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Class that handles flight data reading from file
+ */
 public class FlightDataReader {
 
     private static final int ROWS = 1;
