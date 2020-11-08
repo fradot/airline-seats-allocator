@@ -1,5 +1,6 @@
 package com.fradot.exercise.airline.seats.manager;
 
+import com.fradot.exercise.airline.seats.manager.model.Plane;
 import com.fradot.exercise.airline.seats.manager.reader.FlightDataReader;
 import com.fradot.exercise.airline.seats.manager.service.SeatsAllocatorException;
 import com.fradot.exercise.airline.seats.manager.service.SeatsAllocatorService;
@@ -38,5 +39,21 @@ public class AirlineSeatsManagerIT {
                     {13L, 14L, 15L, 16L}
                 },
                 output);
+    }
+
+    @Test(expected = SeatsAllocatorException.class)
+    public void itShouldThrowAnExceptionWhenGeneratingOutputMatrixIfNoSeatsWereAllocated()
+            throws FileNotFoundException, SeatsAllocatorException {
+        final String fileName = "flight_no_seats_generated.txt";
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final URL resource = classLoader.getResource(fileName);
+        final FlightDataReader flightDataReader = new FlightDataReader(resource.getPath());
+        flightDataReader.readData();
+
+        final SeatsAllocatorService seatsAllocatorService =
+                new SeatsAllocatorService(flightDataReader.getGroupBookingsList(), flightDataReader.getPlane());
+
+        seatsAllocatorService.allocateFlight();
+        final Long[][] output = seatsAllocatorService.generateAllocatedFlightMatrix();
     }
 }
