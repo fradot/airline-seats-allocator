@@ -23,6 +23,12 @@ public class FlightDataReader {
         this.filePath = filePath;
     }
 
+    /**
+     * Reads the data from the file specified when constructing the object.
+     *
+     * @throws FileNotFoundException
+     *      Throws an exception if the file is not found.
+     */
     public void readData() throws FileNotFoundException {
         this.plane = readPlaneDimensions();
         this.groupBookingsList = readBookingsList();
@@ -84,6 +90,11 @@ public class FlightDataReader {
         return bookingsList;
     }
 
+    /**
+     * Return the group of travellers
+     *
+     * @return a {@link List} of {@link List} of {@link Traveler}
+     */
     public List<List<Traveler>> getGroupBookingsList() {
         return groupBookingsList;
     }
@@ -93,6 +104,6 @@ public class FlightDataReader {
     }
 
     private Long getLongId(final String id) {
-        return id.endsWith("W") ? Long.valueOf(id.substring(0, id.length() -1)) : Long.valueOf(id);
+        return id.endsWith("W") ? Long.valueOf(id.substring(0, id.length() - 1)) : Long.valueOf(id);
     }
 }

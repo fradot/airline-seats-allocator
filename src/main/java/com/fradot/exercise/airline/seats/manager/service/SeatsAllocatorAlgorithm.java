@@ -3,6 +3,10 @@ package com.fradot.exercise.airline.seats.manager.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains the logic to populate a seats matrix according to the group of {@link com.fradot.exercise.airline.seats.manager.model.Traveler}s
+ * in input.
+ */
 class SeatsAllocatorAlgorithm {
 
     static final double MAX_TRAVELLERS_SATISFACTION = 100.0;
@@ -11,6 +15,16 @@ class SeatsAllocatorAlgorithm {
 
     private SeatsAllocatorAlgorithm() {}
 
+    /**
+     * This method populate the <code>seatsMatrix</code> using a backtracking approach even if in this case no recursion
+     * is used. The <code>seatsMatrix</code> is an array of arrays of {@link String}s,
+     * each entry of the matrix is an empty {@link String} initially.
+     * Each {@link com.fradot.exercise.airline.seats.manager.model.Traveler} group contained in <code>travellersIds</code>
+     * gets allocated in the first available row with enough space to contain the whole group. The row travellers satisfaction
+     * is then calculated, if it's lower than the
+     * @param seatsMatrix
+     * @param travellersIds
+     */
     static void allocateSeatsForTravellersGroup(final String[][] seatsMatrix, final List<List<String>> travellersIds) {
         double travellersSatisfaction = MAX_TRAVELLERS_SATISFACTION;
         boolean isFindingABetterSpot = false;
@@ -35,7 +49,6 @@ class SeatsAllocatorAlgorithm {
 
                         if (row == seatsMatrix.length - 1) {
                             allocateSeats(seatsMatrix[firstAvailableRowFound], group);
-                            travellersSatisfaction = updatedTravelerSatisfaction;
                             isFindingABetterSpot = false;
                         }
                     } else {

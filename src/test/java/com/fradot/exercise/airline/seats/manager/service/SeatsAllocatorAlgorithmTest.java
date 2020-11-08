@@ -139,16 +139,26 @@ public class SeatsAllocatorAlgorithmTest {
         travellersGroups4.add(generateTravellersIdList("16W", "17", "18W", "19"));
         final String[][] seatsMatrix4 = generateEmptySeatsMatrix(4, 1);
 
-        // No travellers
+        // Last row should be placed at the end to maximise satisfaction
         final List<List<String>> travellersGroups5 = new ArrayList<>();
-        final String[][] seatsMatrix5 = generateEmptySeatsMatrix(4, 4);
+        travellersGroups5.add(generateTravellersIdList("1W", "2", "3"));
+        travellersGroups5.add(generateTravellersIdList("4W", "5W", "6W", "7W"));
+        travellersGroups5.add(generateTravellersIdList("8W", "10W", "11W", "12W", "13W"));
+        travellersGroups5.add(generateTravellersIdList("16W", "17W"));
+        final String[][] seatsMatrix5 = generateEmptySeatsMatrix(4, 5);
+
+        // No travellers
+        final List<List<String>> travellersGroups6 = new ArrayList<>();
+        final String[][] seatsMatrix6 = generateEmptySeatsMatrix(4, 4);
 
         SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix1, travellersGroups1);
         SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix2, travellersGroups2);
         SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix3, travellersGroups3);
         SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix4, travellersGroups4);
         SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix5, travellersGroups5);
+        SeatsAllocatorAlgorithm.allocateSeatsForTravellersGroup(seatsMatrix6, travellersGroups6);
 
+        // 1
         assertEquals(95, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix1, travellersGroups1), 0.01);
         assertArrayEquals(
                 new String[][] {
@@ -158,6 +168,7 @@ public class SeatsAllocatorAlgorithmTest {
                     {"", "", "", ""}
                 },
                 seatsMatrix1);
+        // 2
         assertEquals(
                 100.0, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix2, travellersGroups2), 0.01);
         assertArrayEquals(
@@ -168,6 +179,8 @@ public class SeatsAllocatorAlgorithmTest {
                     {"15W", "16", "18", "17W"}
                 },
                 seatsMatrix2);
+
+        // 3
         assertArrayEquals(
                 new String[][] {
                     {"14W", "2", "1", "15W"},
@@ -178,8 +191,23 @@ public class SeatsAllocatorAlgorithmTest {
                 seatsMatrix3);
         assertEquals(
                 70.58, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix3, travellersGroups3), 0.01);
+
+        // 4
         assertArrayEquals(new String[][] {{""}, {""}, {""}, {""}}, seatsMatrix4);
         assertEquals(0.0, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix4, travellersGroups4), 0.01);
-        assertEquals(0.0, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix5, travellersGroups5), 0.01);
+
+        // 5
+        assertArrayEquals(
+                new String[][] {
+                        {"1W", "2", "3", "", ""},
+                        {"4W", "6W", "7W", "", "5W"},
+                        {"8W", "11W", "12W", "13W", "10W"},
+                        {"16W", "", "", "", "17W"}
+                },
+                seatsMatrix5);
+        assertEquals(
+                82.14, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix5, travellersGroups5), 0.01);
+
+        assertEquals(0.0, SeatsAllocatorAlgorithm.calculateBookingsSatisfaction(seatsMatrix6, travellersGroups6), 0.01);
     }
 }
