@@ -19,16 +19,31 @@ class SeatsAllocatorAlgorithm {
      * This method populate the <code>seatsMatrix</code> using a backtracking approach even if in this case no recursion
      * is used. The <code>seatsMatrix</code> is an array of arrays of {@link String}s,
      * each entry of the matrix is an empty {@link String} initially.
-     * Each {@link com.fradot.exercise.airline.seats.manager.model.Traveler} group contained in <code>travellersIds</code>
-     * gets allocated in the first available row with enough space to contain the whole group. The row travellers satisfaction
-     * is then calculated, if it's lower than the
-     * @param seatsMatrix
-     * @param travellersIds
+     *
+     * Initially the {@link com.fradot.exercise.airline.seats.manager.model.Traveler} group contained in <code>travellersIds</code>
+     * gets allocated in the first row available with enough space. The row travellers satisfaction
+     * is then calculated, if it's lower than the <code>MAX_TRAVELLERS_SATISFACTION</code>, the algorithm "backtrack" by
+     * removing the solution and trying to find a better place which maximise the satisfaction. At each step the row satisfaction
+     * is stored in a hashmap, associated with the corresponding row. When there are no more rows available the group is
+     * allocated in the row where the satisfaction was higher than all the other satisfactions calculated. An heap is used to
+     * extract the first row which maximise the satisfaction.
+     *
+     *
+     * @param seatsMatrix The matrix to be allocated with the {@link com.fradot.exercise.airline.seats.manager.model.Traveler}s ids
+     * @param travellersIds The {@link List} of groups of {@link com.fradot.exercise.airline.seats.manager.model.Traveler}s
      */
     static void allocateSeatsForTravellersGroup(final String[][] seatsMatrix, final List<List<String>> travellersIds) {
-        double travellersSatisfaction = MAX_TRAVELLERS_SATISFACTION;
-        boolean isFindingABetterSpot = false;
-        int firstAvailableRowFound = 0;
+        final Map<Integer, Double> travellersSatisfactionByRow = new HashMap<>();
+        final PriorityQueue<Map.Entry<Integer, Double>> heap = new PriorityQueue<>((entryA, entryB) -> {
+            final int rowA = entryA.getKey();
+            final double satA = entryA.getValue();
+            final int rowB = entryB.getKey();
+            final double satB = entryB.getValue();
+            if (satA == satB && rowA == rowB) return 0;
+            if (satA > satB) return -1;
+            if (satA < satB) return 1;
+            return satA == satB && rowA <= rowB ? -1 : 1;
+        });
 
         if (travellersIds == null || travellersIds.size() == 0) {
             return;
@@ -39,22 +54,33 @@ class SeatsAllocatorAlgorithm {
                 final int availableSeatsForCurrentRow = getNumberOfAvailableSeatsPerRow(seatsMatrix[row]);
 
                 if (availableSeatsForCurrentRow >= group.size()) {
-                    firstAvailableRowFound = isFindingABetterSpot ? firstAvailableRowFound : row;
                     allocateSeats(seatsMatrix[row], group);
 
-                    final double updatedTravelerSatisfaction = calculateRowSatisfaction(seatsMatrix[row]);
-                    if (updatedTravelerSatisfaction < travellersSatisfaction) {
-                        isFindingABetterSpot = true;
+                    final double currentTravelerSatisfaction = calculateRowSatisfaction(seatsMatrix[row]);
+                    if (currentTravelerSatisfaction < MAX_TRAVELLERS_SATISFACTION) {
+                        travellersSatisfactionByRow.putIfAbsent(row, currentTravelerSatisfaction);
                         deAllocateSeats(seatsMatrix[row], group);
 
                         if (row == seatsMatrix.length - 1) {
-                            allocateSeats(seatsMatrix[firstAvailableRowFound], group);
-                            isFindingABetterSpot = false;
+                            heap.addAll(travellersSatisfactionByRow.entrySet());
+                            allocateSeats(seatsMatrix[heap.poll().getKey()], group);
+                            heap.clear();
+                            travellersSatisfactionByRow.clear();
                         }
                     } else {
+                        heap.clear();
+                        travellersSatisfactionByRow.clear();
                         break;
                     }
                 }
+            }
+
+            // if no more rows are available to fit the group but a place was found then allocate it
+            if (heap.isEmpty() && !travellersSatisfactionByRow.isEmpty()) {
+                heap.addAll(travellersSatisfactionByRow.entrySet());
+                allocateSeats(seatsMatrix[heap.poll().getKey()], group);
+                heap.clear();
+                travellersSatisfactionByRow.clear();
             }
         }
     }
